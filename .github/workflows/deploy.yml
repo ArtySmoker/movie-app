@@ -19,6 +19,6 @@ jobs:
         uses: crazy-max/ghaction-github-pages@v3
         with:
           target_branch: gh-pages
-          build_dir: dist/<project-name>
+          build_dir: dist/movie-app
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
