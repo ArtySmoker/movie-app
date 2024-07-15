@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # Убедитесь, что это соответствует названию вашей основной ветки
+      - main
 
 jobs:
   build-and-deploy:
@@ -15,16 +15,19 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '18'  # Обновлено до версии 18
+        node-version: '18'
 
     - name: Install dependencies
       run: npm ci
 
     - name: Build
-      run: npm run build -- --configuration=production --base-href="/movie-app/"
+      run: npm run build -- --configuration=production
+
+    - name: List build output
+      run: ls -R dist/movie-app
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./dist/movie-app 
+        publish_dir: ./dist/movie-app/browser
