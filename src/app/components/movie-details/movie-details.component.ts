@@ -38,9 +38,11 @@ export class MovieDetailsComponent implements OnInit {
         this.movie = data.movieDetails;
         this.credits = data.credits;
         this.translations = data.translations;
+        console.log('Movie details loaded:', this.movie);
       },
       error: (error) => {
         console.error('Error fetching movie details:', error);
+        // Здесь можно добавить логику обработки ошибки, например, показать сообщение пользователю
       }
     });
   }

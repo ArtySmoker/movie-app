@@ -1,19 +1,44 @@
-<div *ngIf="movie">
-  <h1>{{ movie.title }}</h1>
-  <img [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" alt="{{ movie.title }}" />
-  <p>{{ movie.overview }}</p>
+<div class="movie-details" *ngIf="movie">
+  <div class="movie-header">
+    <h1>{{ movie.title }}</h1>
+    <p class="tagline">{{ movie.tagline }}</p>
+  </div>
+  
+  <div class="movie-content">
+    <div class="movie-poster">
+      <img *ngIf="movie.poster_path" [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" [alt]="movie.title">
+    </div>
+    
+    <div class="movie-info">
+      <p class="overview">{{ movie.overview }}</p>
+      
+      <div class="movie-meta">
+        <p><strong>Release Date:</strong> {{ movie.release_date | date }}</p>
+        <p><strong>Runtime:</strong> {{ movie.runtime }} minutes</p>
+        <p><strong>Rating:</strong> {{ movie.vote_average }}/10</p>
+      </div>
 
-  <h3>Cast</h3>
-  <ul *ngIf="credits && credits.cast">
-    <li *ngFor="let actor of credits.cast.slice(0, 10)">{{ actor.name }} as {{ actor.character }}</li>
-  </ul>
+      <div class="cast" *ngIf="credits && credits.cast">
+        <h3>Top Cast</h3>
+        <ul>
+          <li *ngFor="let actor of credits.cast.slice(0, 5)">
+            {{ actor.name }} as {{ actor.character }}
+          </li>
+        </ul>
+      </div>
 
-  <h3>Translations</h3>
-  <ul *ngIf="translations && translations.translations">
-    <li *ngFor="let translation of translations.translations">{{ translation.english_name }}</li>
-  </ul>
+      <div class="translations" *ngIf="translations && translations.translations">
+        <h3>Available in</h3>
+        <ul>
+          <li *ngFor="let translation of translations.translations.slice(0, 5)">
+            {{ translation.english_name }}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div *ngIf="!movie">
+<div class="loading" *ngIf="!movie">
   Loading movie details...
 </div>

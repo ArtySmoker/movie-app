@@ -3,15 +3,18 @@ import { TmdbService } from '../../../app/services/tmdb.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { MovieItemComponent } from '../movie-item/movie-item.component';
+import { PaginationComponent } from '../pagination/pagination.component';
+import { ViewToggleComponent } from '../view-toggle/view-toggle.component';
 
 @Component({
   selector: 'app-movie-list',
   templateUrl: './movie-list.component.html',
   styleUrls: ['./movie-list.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule,RouterLink]
+  imports: [CommonModule, FormsModule, RouterLink, MovieItemComponent, PaginationComponent, ViewToggleComponent]
 })
-export class MovieListComponent  implements OnInit{
+export class MovieListComponent implements OnInit {
   movies: any[] = [];
   genres: any[] = [];
   countries: any[] = [];
@@ -20,6 +23,9 @@ export class MovieListComponent  implements OnInit{
     year: '',
     country: ''
   };
+  viewMode: 'grid' | 'list' = 'grid';
+  currentPage = 1;
+  totalPages = 1;
 
   constructor(private tmdbService: TmdbService) {}
 
@@ -30,8 +36,10 @@ export class MovieListComponent  implements OnInit{
   }
 
   loadMovies() {
-    this.tmdbService.getMovies(this.filters).subscribe((data: any) => {
+    this.tmdbService.getMovies(this.filters, this.currentPage).subscribe((data: any) => {
       this.movies = data.results;
+      this.totalPages = data.total_pages;
+      console.log('Loaded movies:', this.movies);
     });
   }
 
@@ -48,6 +56,16 @@ export class MovieListComponent  implements OnInit{
   }
 
   onFilterChange() {
+    this.currentPage = 1;
+    this.loadMovies();
+  }
+
+  onViewChange(view: 'grid' | 'list') {
+    this.viewMode = view;
+  }
+
+  onPageChange(page: number) {
+    this.currentPage = page;
     this.loadMovies();
   }
 }

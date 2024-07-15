@@ -1,0 +1,17 @@
+.view-toggle {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+button {
+  padding: 5px 10px;
+  margin-left: 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+}
+button.active {
+  background-color: #007bff;
+  color: white;
+}

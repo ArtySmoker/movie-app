@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { MovieItemComponent } from './components/movie-item/movie-item.component';
+import { PaginationComponent } from './components/pagination/pagination.component';
 
 
 @Component({
@@ -8,7 +10,7 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   standalone: true, 
-  imports: [CommonModule, RouterOutlet],
+  imports: [CommonModule, RouterOutlet,CommonModule, MovieItemComponent, PaginationComponent] ,
   template: `
     <h1>Movie App</h1>
     <router-outlet></router-outlet>

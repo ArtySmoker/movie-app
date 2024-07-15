@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '@env/environment';
 
 @Injectable({
@@ -11,17 +11,19 @@ export class TmdbService {
 
   constructor(private http: HttpClient) {}
 
-  getMovies(filters: any) {
-    let params: any = { api_key: this.apiKey };
+  getMovies(filters: any, page: number = 1) {
+    let params = new HttpParams()
+      .set('api_key', this.apiKey)
+      .set('page', page.toString());
 
     if (filters.genre) {
-      params.with_genres = filters.genre;
+      params = params.set('with_genres', filters.genre);
     }
     if (filters.year) {
-      params.primary_release_year = filters.year;
+      params = params.set('primary_release_year', filters.year);
     }
     if (filters.country) {
-      params.with_origin_country = filters.country;
+      params = params.set('with_origin_country', filters.country);
     }
 
     return this.http.get(`${this.apiUrl}/discover/movie`, { params });

@@ -7,9 +7,9 @@ const routes: Routes = [
   { path: '', component: MovieListComponent },
   { path: 'movie/:id', component: MovieDetailsComponent }
 ];
-  
+
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
