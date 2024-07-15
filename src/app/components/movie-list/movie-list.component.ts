@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TmdbService } from '../../../app/services/tmdb.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { MovieItemComponent } from '../movie-item/movie-item.component';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { ViewToggleComponent } from '../view-toggle/view-toggle.component';
@@ -27,19 +27,24 @@ export class MovieListComponent implements OnInit {
   currentPage = 1;
   totalPages = 1;
 
-  constructor(private tmdbService: TmdbService) {}
+  constructor(private tmdbService: TmdbService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
-    this.loadMovies();
-    this.loadGenres();
-    this.loadCountries();
+    this.route.queryParams.subscribe(params => {
+      this.filters.genre = params['genre'] || '';
+      this.filters.year = params['year'] || '';
+      this.filters.country = params['country'] || '';
+      this.currentPage = params['page'] ? +params['page'] : 1;
+      this.loadMovies();
+      this.loadGenres();
+      this.loadCountries();
+    });
   }
 
   loadMovies() {
     this.tmdbService.getMovies(this.filters, this.currentPage).subscribe((data: any) => {
       this.movies = data.results;
       this.totalPages = data.total_pages;
-      console.log('Loaded movies:', this.movies);
     });
   }
 
@@ -56,6 +61,16 @@ export class MovieListComponent implements OnInit {
   }
 
   onFilterChange() {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        genre: this.filters.genre,
+        year: this.filters.year,
+        country: this.filters.country,
+        page: 1
+      },
+      queryParamsHandling: 'merge'
+    });
     this.currentPage = 1;
     this.loadMovies();
   }
@@ -65,6 +80,11 @@ export class MovieListComponent implements OnInit {
   }
 
   onPageChange(page: number) {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { page },
+      queryParamsHandling: 'merge'
+    });
     this.currentPage = page;
     this.loadMovies();
   }

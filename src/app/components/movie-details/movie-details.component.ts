@@ -42,7 +42,6 @@ export class MovieDetailsComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error fetching movie details:', error);
-        // Здесь можно добавить логику обработки ошибки, например, показать сообщение пользователю
       }
     });
   }

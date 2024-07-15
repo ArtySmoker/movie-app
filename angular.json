@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "baseHref": "/<repository-name>/",
+            "baseHref": "/movie-app/",
             "outputPath": "dist/movie-app",
             "index": "src/index.html",
             "browser": "src/main.ts",
@@ -22,10 +22,8 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
+              "src/favicon.ico",
+              "src/assets"
             ],
             "styles": [
               "src/styles.css"

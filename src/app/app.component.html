@@ -1,1 +1,23 @@
+<!-- app.component.html -->
+<div *ngIf="isAuthenticated">
+  <nav>
+    <ul>
+      <li><a (click)="navigateTo('movies')">Movies</a></li>
+      <li><a (click)="navigateTo('now-playing')">Now Playing</a></li>
+      <li><a (click)="navigateTo('popular-movies')">Popular Movies</a></li>
+      <li><a (click)="navigateTo('top-rated-movies')">Top Rated Movies</a></li>
+      <li><a (click)="navigateTo('upcoming-movies')">Upcoming Movies</a></li>
+    </ul>
+    <ul>
+      <li><a (click)="navigateTo('all-tv-shows')">All TV Shows</a></li>
+      <li><a (click)="navigateTo('airing-today')">TV Airing Today</a></li>
+      <li><a (click)="navigateTo('on-the-air')">TV On The Air</a></li>
+      <li><a (click)="navigateTo('popular-tv')">Popular TV</a></li>
+      <li><a (click)="navigateTo('top-rated-tv')">Top Rated TV</a></li>
+      
+    </ul>
+    <button (click)="logout()">Logout</button>
+  </nav>
+</div>
+
 <router-outlet></router-outlet>

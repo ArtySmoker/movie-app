@@ -1,21 +1,29 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { MovieItemComponent } from './components/movie-item/movie-item.component';
-import { PaginationComponent } from './components/pagination/pagination.component';
-
+import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { AuthService } from './guards/auth.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  standalone: true, 
-  imports: [CommonModule, RouterOutlet,CommonModule, MovieItemComponent, PaginationComponent] ,
-  template: `
-    <h1>Movie App</h1>
-    <router-outlet></router-outlet>
-  `
+  standalone: true,
+  imports: [RouterModule, CommonModule]
 })
 export class AppComponent {
-  title = 'movie-app';
+  get isAuthenticated() {
+    return this.authService.isAuthenticated();
+  }
+  
+  constructor(private router: Router, private authService: AuthService) {}
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
+
+  navigateTo(path: string) {
+    this.router.navigate([path]);
+  }
 }

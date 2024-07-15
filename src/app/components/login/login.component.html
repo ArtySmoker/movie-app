@@ -1,0 +1,7 @@
+<form (ngSubmit)="login()">
+  <div>
+    <label for="apiKey">API Key:</label>
+    <input type="text" id="apiKey" [(ngModel)]="apiKey" name="apiKey" required>
+  </div>
+  <button type="submit">Login</button>
+</form>
