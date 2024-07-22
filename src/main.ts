@@ -29,7 +29,7 @@ bootstrapApplication(AppComponent, {
     provideHttpClient(),
     provideRouter([
       { path: 'login', component: LoginComponent },
-      { path: '', redirectTo: '#', pathMatch: 'full' },
+      { path: '', redirectTo: 'login', pathMatch: 'full' },
       {
         path: '',
         
