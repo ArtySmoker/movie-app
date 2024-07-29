@@ -1,1 +1,30 @@
-<p>tv-all works!</p>
+<div class="container">
+  <div class="filters">
+    <select [(ngModel)]="filters.genre" (change)="onFilterChange()">
+      <option value="">All Genres</option>
+      <option *ngFor="let genre of genres" [value]="genre.id">{{ genre.name }}</option>
+    </select>
+    <select [(ngModel)]="filters.country" (change)="onFilterChange()">
+      <option value="">All Countries</option>
+      <option *ngFor="let country of countries" [value]="country.iso_3166_1">{{ country.english_name }}</option>
+    </select>
+    <input type="number" [(ngModel)]="filters.year" (change)="onFilterChange()" placeholder="Year">
+  </div>
+
+  <app-view-toggle (viewChange)="onViewChange($event)"></app-view-toggle>
+
+  <div [ngClass]="{'grid-view': viewMode === 'grid', 'list-view': viewMode === 'list'}">
+    <app-movie-item 
+      *ngFor="let show of shows" 
+      [movie]="show" 
+      [viewMode]="viewMode" 
+      [itemType]="'tv'">
+    </app-movie-item>
+  </div>
+
+  <app-pagination 
+    [currentPage]="currentPage" 
+    [totalPages]="totalPages" 
+    (pageChange)="onPageChange($event)">
+  </app-pagination>
+</div>

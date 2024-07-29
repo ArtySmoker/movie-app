@@ -1,1 +1,25 @@
-<p>popular-movies works!</p>
+<div class="movie-container">
+  <div class="movie-filters">
+    <select [(ngModel)]="filters.genre" (change)="onFilterChange()">
+      <option value="">All Genres</option>
+      <option *ngFor="let genre of genres" [value]="genre.id">{{genre.name}}</option>
+    </select>
+    <select [(ngModel)]="filters.country" (change)="onFilterChange()">
+      <option value="">All Countries</option>
+      <option *ngFor="let country of countries" [value]="country.iso_3166_1">{{country.english_name}}</option>
+    </select>
+    <input type="number" [(ngModel)]="filters.year" (change)="onFilterChange()" placeholder="Year">
+  </div>
+
+  <div class="movie-view-toggle">
+    <app-view-toggle (viewChange)="onViewChange($event)"></app-view-toggle>
+  </div>
+
+  <div [ngClass]="{'movie-grid-view': viewMode === 'grid', 'movie-list-view': viewMode === 'list'}">
+    <app-movie-item *ngFor="let movie of movies" [movie]="movie" [viewMode]="viewMode"></app-movie-item>
+  </div>
+
+  <div class="movie-pagination">
+    <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></app-pagination>
+  </div>
+</div>

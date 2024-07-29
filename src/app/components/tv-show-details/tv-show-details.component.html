@@ -1,0 +1,44 @@
+<div class="tv-show-details" *ngIf="tvShow">
+  <div class="tv-show-header">
+    <h1>{{ tvShow.name }}</h1>
+    <p class="tagline">{{ tvShow.tagline }}</p>
+  </div>
+  
+  <div class="tv-show-content">
+    <div class="tv-show-poster">
+      <img *ngIf="tvShow.poster_path" [src]="'https://image.tmdb.org/t/p/w500' + tvShow.poster_path" [alt]="tvShow.name">
+    </div>
+    
+    <div class="tv-show-info">
+      <p class="overview">{{ tvShow.overview }}</p>
+      
+      <div class="tv-show-meta">
+        <p><strong>First Air Date:</strong> {{ tvShow.first_air_date | date }}</p>
+        <p><strong>Number of Seasons:</strong> {{ tvShow.number_of_seasons }}</p>
+        <p><strong>Rating:</strong> {{ tvShow.vote_average }}/10</p>
+      </div>
+
+      <div class="cast" *ngIf="credits && credits.cast">
+        <h3>Top Cast</h3>
+        <ul>
+          <li *ngFor="let actor of credits.cast.slice(0, 5)">
+            {{ actor.name }} as {{ actor.character }}
+          </li>
+        </ul>
+      </div>
+
+      <div class="translations" *ngIf="translations && translations.translations">
+        <h3>Available in</h3>
+        <ul>
+          <li *ngFor="let translation of translations.translations.slice(0, 5)">
+            {{ translation.english_name }}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="loading" *ngIf="!tvShow">
+  Loading TV show details...
+</div>

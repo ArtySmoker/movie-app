@@ -1,8 +1,8 @@
 <div class="movie-item" [ngClass]="{'grid-item': viewMode === 'grid', 'list-item': viewMode === 'list'}" (click)="onMovieClick()">
-  <img *ngIf="movie.poster_path" [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" [alt]="movie.title" class="movie-poster">
+  <img *ngIf="movie.poster_path" [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" [alt]="movie.title || movie.name" class="movie-poster">
   <div class="movie-info">
-    <h2>{{ movie.title }}</h2>
+    <h2>{{ movie.title || movie.name }}</h2>
     <p>{{ movie.overview }}</p>
-    <p>Year: {{ movie.release_date | date:'yyyy' }}</p>
+    <p>Year: {{ getYear() }}</p>
   </div>
 </div>

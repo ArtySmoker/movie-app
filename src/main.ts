@@ -16,12 +16,12 @@ import { PopularMoviesComponent } from './app/components/popular-movies/popular-
 import { TopRatedMoviesComponent } from './app/components/top-rated-movies/top-rated-movies.component';
 import { UpcomingMoviesComponent } from './app/components/upcoming-movies/upcoming-movies.component';
 
-
 import { TvPopularComponent } from './app/components/tv-popular/tv-popular.component';
 import { TvTopRatedComponent } from './app/components/tv-top-rated/tv-top-rated.component';
 import { TvAiringTodayComponent } from './app/components/tv-airing-today/tv-airing-today.component';
 import { TvOnTheAirComponent } from './app/components/tv-on-the-air/tv-on-the-air.component';
 import { TvAllComponent } from './app/components/tv-all/tv-all.component';
+import { TvShowDetailsComponent } from './app/components/tv-show-details/tv-show-details.component';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -32,7 +32,6 @@ bootstrapApplication(AppComponent, {
       { path: '', redirectTo: 'login', pathMatch: 'full' },
       {
         path: '',
-        
         canActivate: [AuthGuard],
         children: [
           { path: 'movies', component: MovieListComponent },
@@ -47,7 +46,8 @@ bootstrapApplication(AppComponent, {
           { path: 'all-tv-shows', component: TvAllComponent }
         ]
       },
-      { path: 'movie/:id', component: MovieDetailsComponent }
+      { path: 'movie/:id', component: MovieDetailsComponent },
+      { path: 'tv-show/:id', component: TvShowDetailsComponent }
     ])
   ]
 }).catch(err => console.error(err));
