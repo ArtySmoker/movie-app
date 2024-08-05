@@ -41,13 +41,13 @@ export class NowPlayingComponent implements OnInit {
     });
   }
 
+  
   loadMovies() {
-    this.tmdbService.getNowPlayingMovies(this.currentPage).subscribe((data: any) => {
+    this.tmdbService.getNowPlayingMovies(this.filters, this.currentPage).subscribe((data: any) => {
       this.movies = data.results;
       this.totalPages = data.total_pages;
     });
   }
-
   loadGenres() {
     this.tmdbService.getGenres().subscribe((data: any) => {
       this.genres = data.genres;

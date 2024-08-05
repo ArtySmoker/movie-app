@@ -43,26 +43,15 @@ export class PopularMoviesComponent implements OnInit {
       this.loadCountries();
     });
   }
-
+  
   loadMovies() {
-    console.log('Loading movies with filters:', this.filters);
-    this.tmdbService.getPopularMovies(this.currentPage, this.filters).subscribe(
-      (data: any) => {
-        console.log('Movies data received:', data);
-        this.movies = data.results;
-        this.totalPages = data.total_pages;
-        if (this.movies.length === 0) {
-          console.log('No movies returned from the API');
-        } else {
-          console.log(`Received ${this.movies.length} movies`);
-        }
-      },
-      error => {
-        console.error('Error fetching movies:', error);
-      }
-    );
+    this.tmdbService.getPopularMovies(this.filters, this.currentPage).subscribe((data: any) => {
+      this.movies = data.results;
+      this.totalPages = data.total_pages;
+    });
   }
-
+  
+  
   loadGenres() {
     this.tmdbService.getGenres().subscribe((data: any) => {
       console.log('Genres loaded:', data);

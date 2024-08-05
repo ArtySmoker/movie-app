@@ -35,19 +35,20 @@ export class TvOnTheAirComponent implements OnInit {
       this.filters.year = params['year'] || '';
       this.filters.country = params['country'] || '';
       this.currentPage = params['page'] ? +params['page'] : 1;
-      this.loadTvOnTheAir();
+      this.loadShows();
       this.loadGenres();
       this.loadCountries();
     });
   }
 
-  loadTvOnTheAir(page: number = 1): void {
-    this.tmdbService.getTvOnTheAir(page, this.filters).subscribe((data: any) => {
+  
+  loadShows() {
+    this.tmdbService.getTopRatedTvShows(this.filters, this.currentPage).subscribe((data: any) => {
       this.shows = data.results;
       this.totalPages = data.total_pages;
-      this.currentPage = page;
     });
   }
+  
 
   loadGenres() {
     this.tmdbService.getTvGenres().subscribe((data: any) => {
@@ -73,7 +74,7 @@ export class TvOnTheAirComponent implements OnInit {
       queryParamsHandling: 'merge'
     });
     this.currentPage = 1;
-    this.loadTvOnTheAir();
+    this.loadShows();
   }
 
   onViewChange(view: 'grid' | 'list') {
@@ -87,6 +88,6 @@ export class TvOnTheAirComponent implements OnInit {
       queryParamsHandling: 'merge'
     });
     this.currentPage = page;
-    this.loadTvOnTheAir(page);
+    this.loadShows();
   }
 }

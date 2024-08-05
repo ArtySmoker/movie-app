@@ -85,20 +85,37 @@ export class TmdbService {
     });
   }
 
-  getNowPlayingMovies(page: number = 1) {
-    const params = new HttpParams()
-      .set('api_key', this.apiKey)
-      .set('page', page.toString());
+  getNowPlayingMovies(filters: any = {}, page: number = 1): Observable<any> {
+    const currentDate = new Date();
+    const lastMonth = new Date(currentDate.getTime() - 30 * 24 * 60 * 60 * 1000);
     
-    return this.http.get(`${this.apiUrl}/movie/now_playing`, { params });
+    let params = new HttpParams()
+      .set('api_key', this.apiKey)
+      .set('page', page.toString())
+      .set('sort_by', 'release_date.desc')
+      .set('release_date.gte', lastMonth.toISOString().split('T')[0])
+      .set('release_date.lte', currentDate.toISOString().split('T')[0])
+      .set('with_release_type', '2|3');
+      
+  
+    if (filters.genre) {
+      params = params.append('with_genres', filters.genre);
+    }
+    if (filters.year) {
+      params = params.append('primary_release_year', filters.year);
+    }
+    if (filters.country) {
+      params = params.append('with_origin_country', filters.country);
+    }
+  
+    return this.http.get(`${this.apiUrl}/discover/movie`, { params });
   }
 
-  getPopularMovies(page: number, filters: any): Observable<any> {
-    console.log('getPopularMovies called with filters:', filters);
+  getPopularMovies(filters: any = {}, page: number = 1): Observable<any> {
     let params = new HttpParams()
       .set('api_key', this.apiKey)
       .set('page', page.toString());
-    
+
     if (filters.genre) {
       params = params.set('with_genres', filters.genre);
     }
@@ -108,51 +125,79 @@ export class TmdbService {
     if (filters.country) {
       params = params.set('with_origin_country', filters.country);
     }
-  
-    console.log('API request URL:', `${this.apiUrl}/movie/popular`);
-    console.log('API request params:', params.toString());
 
-    return this.http.get(`${this.apiUrl}/movie/popular`, { params }).pipe(
-      tap(
-        data => console.log('API response:', data),
-        error => console.error('API error:', error)
-      )
-    );
+    return this.http.get(`${this.apiUrl}/discover/movie`, { params });
   }
+
   
 
-  getTopRatedMovies(page: number = 1) {
-    const params = new HttpParams()
-      .set('api_key', this.apiKey)
-      .set('page', page.toString());
-
-    return this.http.get(`${this.apiUrl}/movie/top_rated`, { params });
-  }
-
-  getUpcomingMovies(page: number = 1) {
-    const params = new HttpParams()
-      .set('api_key', this.apiKey)
-      .set('page', page.toString());
-
-    return this.http.get(`${this.apiUrl}/movie/upcoming`, { params });
-  }
-
-  getTvAiringToday(filters: any, page: number) {
+  getTopRatedMovies(filters: any = {}, page: number = 1) {
     let params = new HttpParams()
       .set('api_key', this.apiKey)
-      .set('page', page.toString());
+      .set('page', page.toString())
+      .set('sort_by', 'vote_average.desc')  
+      .set('vote_count.gte', '1000');
   
     if (filters.genre) {
-      params = params.set('with_genres', filters.genre);
+      params = params.append('with_genres', filters.genre);
     }
     if (filters.year) {
-      params = params.set('first_air_date_year', filters.year);
+      params = params.append('primary_release_year', filters.year);
     }
     if (filters.country) {
-      params = params.set('with_origin_country', filters.country);
+      params = params.append('with_origin_country', filters.country);
     }
   
-    return this.http.get(`${this.apiUrl}/tv/airing_today`, { params });
+    return this.http.get(`${this.apiUrl}/discover/movie`, { params });
+  }
+
+  getUpcomingMovies(filters: any = {}, page: number = 1): Observable<any> {
+    const currentDate = new Date();
+    const nextMonth = new Date(currentDate.getTime() + 30 * 24 * 60 * 60 * 1000);
+    
+    let params = new HttpParams()
+      .set('api_key', this.apiKey)
+      .set('page', page.toString())
+      .set('sort_by', 'release_date.asc')
+      .set('release_date.gte', currentDate.toISOString().split('T')[0])
+      .set('release_date.lte', nextMonth.toISOString().split('T')[0])
+      .set('with_release_type', '2|3');
+  
+    if (filters.genre) {
+      params = params.append('with_genres', filters.genre);
+    }
+    if (filters.year) {
+      params = params.append('primary_release_year', filters.year);
+    }
+    if (filters.country) {
+      params = params.append('with_origin_country', filters.country);
+    }
+  
+    return this.http.get(`${this.apiUrl}/discover/movie`, { params });
+  }
+
+  getTvAiringToday(filters: any = {}, page: number = 1): Observable<any> {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    let params = new HttpParams()
+      .set('api_key', this.apiKey)
+      .set('page', page.toString())
+      .set('air_date.gte', today.toISOString().split('T')[0])
+      .set('air_date.lte', tomorrow.toISOString().split('T')[0]);
+  
+    if (filters.genre) {
+      params = params.append('with_genres', filters.genre);
+    }
+    if (filters.year) {
+      params = params.append('first_air_date_year', filters.year);
+    }
+    if (filters.country) {
+      params = params.append('with_origin_country', filters.country);
+    }
+  
+    return this.http.get(`${this.apiUrl}/discover/tv`, { params });
   }
 
   getTvShowDetails(id: number) {
@@ -167,9 +212,58 @@ export class TmdbService {
     return this.http.get(`${this.apiUrl}/tv/${id}/translations?api_key=${this.apiKey}`);
   }
   
-  getTvOnTheAir(page: number = 1, filters: any = {}): Observable<any> {
-    let params = new HttpParams().set('api_key', this.apiKey).set('page', page.toString());
+  getTvOnTheAir(filters: any = {}, page: number = 1): Observable<any> {
+    const currentDate = new Date();
+    const nextWeek = new Date(currentDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+    
+    let params = new HttpParams()
+      .set('api_key', this.apiKey)
+      .set('page', page.toString())
+      .set('sort_by', 'first_air_date.asc')
+      .set('air_date.gte', currentDate.toISOString().split('T')[0])
+      .set('air_date.lte', nextWeek.toISOString().split('T')[0]);
+      
   
+    if (filters.genre) {
+      params = params.append('with_genres', filters.genre);
+    }
+    if (filters.year) {
+      params = params.append('first_air_date_year', filters.year);
+    }
+    if (filters.country) {
+      params = params.append('with_origin_country', filters.country);
+    }
+  
+    return this.http.get(`${this.apiUrl}/discover/tv`, { params });
+  }
+  
+
+  getTopRatedTvShows(filters: any = {}, page: number = 1): Observable<any> {
+    let params = new HttpParams()
+      .set('api_key', this.apiKey)
+      .set('page', page.toString())
+      .set('sort_by', 'vote_average.desc')
+      .set('vote_count.gte', '100');
+      
+  
+    if (filters.genre) {
+      params = params.append('with_genres', filters.genre);
+    }
+    if (filters.year) {
+      params = params.append('first_air_date_year', filters.year);
+    }
+    if (filters.country) {
+      params = params.append('with_origin_country', filters.country);
+    }
+  
+    return this.http.get(`${this.apiUrl}/discover/tv`, { params });
+  }
+
+  getPopularTvShows(filters: any = {}, page: number = 1): Observable<any> { 
+    let params = new HttpParams()
+      .set('api_key', this.apiKey)
+      .set('page', page.toString());
+
     if (filters.genre) {
       params = params.set('with_genres', filters.genre);
     }
@@ -177,18 +271,9 @@ export class TmdbService {
       params = params.set('first_air_date_year', filters.year);
     }
     if (filters.country) {
-      params = params.set('region', filters.country);
+      params = params.set('with_origin_country', filters.country);
     }
-  
-    return this.http.get(`${this.apiUrl}/tv/on_the_air`, { params });
-  }
-  
-
-  getTopRatedTvShows(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/tv/top_rated?api_key=${this.apiKey}`);
-  }
-
-  getPopularTvShows(): Observable<any> {  
-    return this.http.get(`${this.apiUrl}/tv/popular?api_key=${this.apiKey}`);
+    return this.http.get(`${this.apiUrl}/discover/tv`,{ params });
+   
   }
 }

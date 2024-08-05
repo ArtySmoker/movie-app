@@ -42,7 +42,7 @@ export class TvPopularComponent implements OnInit {
   }
 
   loadShows() {
-    this.tmdbService.getPopularTvShows().subscribe((data: any) => {  // No arguments here
+    this.tmdbService.getPopularTvShows(this.filters, this.currentPage).subscribe((data: any) => { 
       this.shows = data.results;
       this.totalPages = data.total_pages;
     });

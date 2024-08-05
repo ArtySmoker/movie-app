@@ -42,7 +42,7 @@ export class TvTopRatedComponent implements OnInit {
   }
 
   loadShows() {
-    this.tmdbService.getTopRatedTvShows().subscribe((data: any) => {
+    this.tmdbService.getTopRatedTvShows(this.filters, this.currentPage).subscribe((data: any) => {
       this.shows = data.results;
       this.totalPages = data.total_pages;
     });
